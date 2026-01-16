@@ -11,7 +11,7 @@ import HotKey
 import UpdateNotification
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSTouchBarDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	// MARK: - Variables
 	
@@ -35,49 +35,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTouchBarDelegate {
 	var eventMonitor: EventMonitor?
 	
 	// Touch Bar
-	var groupTouchBar: NSTouchBar?
+	//var groupTouchBar: NSTouchBar?
 	
-	lazy var tbControlStripButton = NSButton(title: "00", target: self, action: #selector(presentTouchBarMenu))
-	let tbSlider = NSSliderTouchBarItem(identifier: .volumeSliderIdentifier)
-	var tbLabelTextField: NSTextField = NSTextField(labelWithString: "00")
+//	lazy var tbControlStripButton = NSButton(title: "00", target: self, action: #selector(presentTouchBarMenu))
+	//let tbSlider = NSSliderTouchBarItem(identifier: .volumeSliderIdentifier)
+	//var tbLabelTextField: NSTextField = NSTextField(labelWithString: "00")
 	
 	// MARK: - Func: Touch Bar
-	@objc func volumeSlider(sender: NSSliderTouchBarItem) {
-		sendVolume(volume: sender.slider.integerValue)
-	}
-	@objc func presentTouchBarMenu() {
-		print("Present")
-		fetchVolume()
-		NSTouchBar.presentSystemModalTouchBar(groupTouchBar, systemTrayItemIdentifier: .controlBarIconIdentifier)
-		DFRElementSetControlStripPresenceForIdentifier(.controlBarIconIdentifier, true)
-	}
+	//@objc func volumeSlider(sender: NSSliderTouchBarItem) {
+	//	sendVolume(volume: sender.slider.integerValue)
+	//}
+	//@objc func presentTouchBarMenu() {
+	//	print("Present")
+	//	fetchVolume()
+	//	NSTouchBar.presentSystemModalTouchBar(groupTouchBar, systemTrayItemIdentifier: .controlBarIconIdentifier)
+	//	DFRElementSetControlStripPresenceForIdentifier(.controlBarIconIdentifier, true)
+	//}
 	
-	func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
 	
-		switch identifier {
-		case .volumeUpIdentifier:
-			let item = NSCustomTouchBarItem(identifier: identifier)
-			item.view = NSButton(title: "Volume Up", target: self, action: #selector(volumeUpBig))
-			return item
-		case .volumeDownIdentifier:
-			let item = NSCustomTouchBarItem(identifier: identifier)
-			item.view = NSButton(title: "Volume Down", target: self, action: #selector(volumeDownBig))
-			return item
-		case .volumeSliderIdentifier:
-			return self.tbSlider
-		case .volumeLabelIdentifier:
-			let item = NSCustomTouchBarItem(identifier: identifier)
-			item.view = tbLabelTextField
-			return item
-		case .controlBarIconIdentifier:
-			let item = NSCustomTouchBarItem(identifier: identifier)
-			item.view = NSButton(title: "🔈", target: self, action: #selector(presentTouchBarMenu))
-			return item
-		default:
-			print("nil")
-			return nil
-		}
-	}
 	
 	// MARK: - Func: Popover
 	
@@ -86,8 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTouchBarDelegate {
 		if let button = statusItem.button {
 			print("showPopover Inside Button")
 			popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
-			
-			updateCheck()
+			//updateCheck()
 		}
 		print("showPopover Button done")
 		
@@ -125,38 +99,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTouchBarDelegate {
 	func updateUI(volume: Int, state: Bool, reachable: Bool) {
 		DispatchQueue.main.async {
 			// Touch Bar
-			
-			self.tbSlider.slider.integerValue = volume
-			self.tbLabelTextField.integerValue = volume
-			
-			if !reachable {
-				self.tbSlider.slider.integerValue = 0
-				self.tbLabelTextField.stringValue = "Unreachable"
-				self.tbLabelTextField.textColor = .red
-				let style = NSMutableParagraphStyle()
-				style.alignment = .center
-				self.tbControlStripButton.attributedTitle = NSMutableAttributedString(string: "Unreachable", attributes: [NSAttributedString.Key.foregroundColor: NSColor.red, NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: NSFont.systemFont(ofSize: 15)])
-			} else if !state {
-				self.tbSlider.slider.integerValue = 0
-				self.tbLabelTextField.stringValue = "Offline"
-				self.tbLabelTextField.textColor = .gray
-				let style = NSMutableParagraphStyle()
-				style.alignment = .center
-				self.tbControlStripButton.attributedTitle = NSMutableAttributedString(string: "Offline", attributes: [NSAttributedString.Key.foregroundColor: NSColor.gray, NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: NSFont.systemFont(ofSize: 15)])
-			} else if volume >= 50 {
-				self.tbLabelTextField.textColor = .red
-				let style = NSMutableParagraphStyle()
-				style.alignment = .center
-				self.tbControlStripButton.attributedTitle = NSMutableAttributedString(string: "\(volume)", attributes: [NSAttributedString.Key.foregroundColor: NSColor.red, NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: NSFont.systemFont(ofSize: 15)])
-			} else if volume == 0 {
-				self.tbLabelTextField.textColor = .gray
-				let style = NSMutableParagraphStyle()
-				style.alignment = .center
-				self.tbControlStripButton.attributedTitle = NSMutableAttributedString(string: "\(volume)", attributes: [NSAttributedString.Key.foregroundColor: NSColor.gray, NSAttributedString.Key.paragraphStyle: style, NSAttributedString.Key.font: NSFont.systemFont(ofSize: 15)])
-			} else {
-				self.tbLabelTextField.textColor = .white
-				self.tbControlStripButton.title = "\(volume)"
-			}
 			
 			// Menu Bar Window
 			self.menuViewController?.updateUI(volume: volume, state: state, reachable: reachable)
@@ -256,27 +198,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTouchBarDelegate {
 		
 		
 		// Touch Bar
-		tbSlider.action = #selector(volumeSlider)
-		tbSlider.slider.minValue = Double(denonCommunicator.volumeMinValue)
-		tbSlider.slider.maxValue = Double(denonCommunicator.volumeMaxValue)
 		
 		DFRSystemModalShowsCloseBoxWhenFrontMost(true)
-		
-		groupTouchBar = NSTouchBar()
-		groupTouchBar?.defaultItemIdentifiers = [.volumeDownIdentifier, .volumeUpIdentifier, .volumeSliderIdentifier, .volumeLabelIdentifier]
-		groupTouchBar?.delegate = self
-		
-		let controlBarIcon = NSCustomTouchBarItem(identifier: .controlBarIconIdentifier)
-		controlBarIcon.view = tbControlStripButton
-		
+				
 		print("Before showPopover")
 		showPopover()
 		print("showPopover finished")
-		presentTouchBarMenu()
+		//presentTouchBarMenu()
 		print("presentTouchBarMenu finished")
-		NSTouchBarItem.addSystemTrayItem(controlBarIcon)
-		NSTouchBar.minimizeSystemModalTouchBar(groupTouchBar)
-		print("Touch Bar finished")
+    //NSTouchBarItem.addSystemTrayItem(controlBarIcon)
+		//NSTouchBar.minimizeSystemModalTouchBar(groupTouchBar)
+    //print("Touch Bar finished")
 		
 		print("applicationDidFinishLaunching finished")
 	}
@@ -286,10 +218,3 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTouchBarDelegate {
 	}
 }
 
-extension NSTouchBarItem.Identifier {
-	static let volumeUpIdentifier = NSTouchBarItem.Identifier("com.melgu.Denon-Volume.volumeUp")
-	static let volumeDownIdentifier = NSTouchBarItem.Identifier("com.melgu.Denon-Volume.volumeDown")
-	static let volumeSliderIdentifier = NSTouchBarItem.Identifier("com.melgu.Denon-Volume.volumeSlider")
-	static let volumeLabelIdentifier = NSTouchBarItem.Identifier("com.melgu.Denon-Volume.volumeLabel")
-	static let controlBarIconIdentifier = NSTouchBarItem.Identifier("com.melgu.Denon-Volume.controlBarIcon")
-}

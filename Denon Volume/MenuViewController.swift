@@ -54,7 +54,7 @@ class MenuViewController: NSViewController {
 	
 	func updateUI(volume: Int, state: Bool, reachable: Bool) {
 		if reachable {
-			deviceField.textColor = NSColor.black
+			//deviceField.textColor = NSColor.black
 			onOffToggle.isEnabled = true
 			if state {
 				onOffToggle.state = NSControl.StateValue(1)
@@ -62,14 +62,14 @@ class MenuViewController: NSViewController {
 				volumeTextLabel.stringValue = "Volume"
 				slider.integerValue = volume
 				volumeLabel.integerValue = volume
-				colorizeVolumeItems(volume: volume)
+				//colorizeVolumeItems(volume: volume)
 			} else {
 				onOffToggle.state = NSControl.StateValue(0)
 				slider.isEnabled = false
 				volumeTextLabel.stringValue = "Offline"
 				slider.integerValue = 0
 				volumeLabel.integerValue = 0
-				colorizeVolumeItems(volume: 0)
+				//colorizeVolumeItems(volume: 0)
 			}
 		} else {
 			deviceField.textColor = NSColor.red
@@ -81,7 +81,7 @@ class MenuViewController: NSViewController {
 			slider.integerValue = 0
 			volumeLabel.integerValue = 0
 			volumeLabel.textColor = NSColor.gray
-			colorizeVolumeItems(volume: 0)
+			//colorizeVolumeItems(volume: 0)
 		}
 		
 		
@@ -95,11 +95,11 @@ class MenuViewController: NSViewController {
 		} else if volume == 0 {
 			self.appDelegate?.statusItem.button?.image = NSImage(named: NSImage.Name("StatusBarButtonImageGray"))
 			self.volumeTextLabel.textColor = .gray
-			self.volumeLabel.textColor = .gray
+			self.volumeLabel.textColor = .white
 		} else {
 			self.appDelegate?.statusItem.button?.image = NSImage(named: NSImage.Name("StatusBarButtonImage"))
 			self.volumeTextLabel.textColor = .black
-			self.volumeLabel.textColor = .black
+			self.volumeLabel.textColor = .gray
 		}
 	}
 	
