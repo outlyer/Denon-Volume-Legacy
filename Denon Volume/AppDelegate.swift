@@ -20,7 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var menuViewController: MenuViewController?
 	
 	// UpdateNotification
-	let updateNotification = UpdateNotification(feedUrl: URL(string: "http://www.melvin-gundlach.de/apps/app-feeds/Denon-Volume.json")!)
+	let updateNotification = UpdateNotification(feedUrl: URL(string: "https://www.melvin-gundlach.de/apps/app-feeds/Denon-Volume.json")!)
 	
 	// Global Hotkeys
 	var hotKeyVolumeUpBig: HotKey?
@@ -33,25 +33,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	let statusItem = NSStatusBar.system.statusItem(withLength: -2)
 	let popover = NSPopover()
 	var eventMonitor: EventMonitor?
-	
-	// Touch Bar
-	//var groupTouchBar: NSTouchBar?
-	
-//	lazy var tbControlStripButton = NSButton(title: "00", target: self, action: #selector(presentTouchBarMenu))
-	//let tbSlider = NSSliderTouchBarItem(identifier: .volumeSliderIdentifier)
-	//var tbLabelTextField: NSTextField = NSTextField(labelWithString: "00")
-	
-	// MARK: - Func: Touch Bar
-	//@objc func volumeSlider(sender: NSSliderTouchBarItem) {
-	//	sendVolume(volume: sender.slider.integerValue)
-	//}
-	//@objc func presentTouchBarMenu() {
-	//	print("Present")
-	//	fetchVolume()
-	//	NSTouchBar.presentSystemModalTouchBar(groupTouchBar, systemTrayItemIdentifier: .controlBarIconIdentifier)
-	//	DFRElementSetControlStripPresenceForIdentifier(.controlBarIconIdentifier, true)
-	//}
-	
 	
 	
 	// MARK: - Func: Popover
@@ -98,9 +79,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	func updateUI(volume: Int, state: Bool, reachable: Bool) {
 		DispatchQueue.main.async {
-			// Touch Bar
-			
-			// Menu Bar Window
 			self.menuViewController?.updateUI(volume: volume, state: state, reachable: reachable)
 		}
 	}
@@ -197,18 +175,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		setGlobalHotKeys()
 		
 		
-		// Touch Bar
-		
-		DFRSystemModalShowsCloseBoxWhenFrontMost(true)
-				
 		print("Before showPopover")
 		showPopover()
 		print("showPopover finished")
-		//presentTouchBarMenu()
-		print("presentTouchBarMenu finished")
-    //NSTouchBarItem.addSystemTrayItem(controlBarIcon)
-		//NSTouchBar.minimizeSystemModalTouchBar(groupTouchBar)
-    //print("Touch Bar finished")
 		
 		print("applicationDidFinishLaunching finished")
 	}
